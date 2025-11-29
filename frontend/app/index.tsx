@@ -721,11 +721,11 @@ export default function Index() {
             !audio1 && styles.disabledButton
           ]}
           onPress={playAudio1Backward}
-          disabled={!audio1 || isPlayingBackward1}
+          disabled={!audio1}
         >
-          <Ionicons name="play-back" size={32} color="#fff" />
+          <Ionicons name={isPlayingBackward1 ? "stop" : "play-back"} size={32} color="#fff" />
           <Text style={styles.buttonText}>
-            {isPlayingBackward1 ? "Playing Backward..." : "Play First Recording Backward"}
+            {isPlayingBackward1 ? "Stop Backward" : "Play First Recording Backward"}
           </Text>
         </TouchableOpacity>
       </View>
