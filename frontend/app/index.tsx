@@ -582,21 +582,38 @@ export default function Index() {
   };
 
   const WaveformIndicator = ({ waveAnim }: { waveAnim: Animated.Value }) => {
-    const scale = waveAnim.interpolate({
-      inputRange: [0, 1],
-      outputRange: [1, 1.5],
-    });
+    // Create staggered animation for each bar
+    const bars = [0, 1, 2, 3, 4, 5, 6, 7];
+    
+    const getBarScale = (index: number) => {
+      return waveAnim.interpolate({
+        inputRange: [0, 0.5, 1],
+        outputRange: [
+          0.3 + (index % 3) * 0.2,
+          1.5 + Math.sin(index) * 0.3,
+          0.5 + (index % 2) * 0.3
+        ],
+      });
+    };
+
+    const getBarOpacity = (index: number) => {
+      return waveAnim.interpolate({
+        inputRange: [0, 0.5, 1],
+        outputRange: [0.4, 1, 0.6],
+      });
+    };
 
     return (
       <View style={styles.waveformContainer}>
-        {[0, 1, 2, 3, 4].map((index) => (
+        {bars.map((index) => (
           <Animated.View
             key={index}
             style={[
               styles.waveBar,
               {
-                transform: [{ scaleY: scale }],
-                opacity: waveAnim,
+                transform: [{ scaleY: getBarScale(index) }],
+                opacity: getBarOpacity(index),
+                height: 30 + (index % 3) * 10, // Varying base heights
               },
             ]}
           />
