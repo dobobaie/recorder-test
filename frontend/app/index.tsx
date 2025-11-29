@@ -476,16 +476,22 @@ export default function Index() {
     // Stop all sounds
     if (sound1) sound1.unloadAsync();
     if (sound2) sound2.unloadAsync();
+    if (soundBackward1) soundBackward1.unloadAsync();
+    if (soundBackward2) soundBackward2.unloadAsync();
     
     // Clear all recordings
     setAudio1(null);
     setAudio2(null);
     setSound1(null);
     setSound2(null);
+    setSoundBackward1(null);
+    setSoundBackward2(null);
     setRecordingTime1(0);
     setRecordingTime2(0);
     setIsPlaying1(false);
     setIsPlaying2(false);
+    setIsPlayingBackward1(false);
+    setIsPlayingBackward2(false);
   };
 
   const formatTime = (seconds: number) => {
