@@ -37,8 +37,12 @@ export default function Index() {
   // Playback states
   const [sound1, setSound1] = useState<Audio.Sound | null>(null);
   const [sound2, setSound2] = useState<Audio.Sound | null>(null);
+  const [soundBackward1, setSoundBackward1] = useState<Audio.Sound | null>(null);
+  const [soundBackward2, setSoundBackward2] = useState<Audio.Sound | null>(null);
   const [isPlaying1, setIsPlaying1] = useState(false);
   const [isPlaying2, setIsPlaying2] = useState(false);
+  const [isPlayingBackward1, setIsPlayingBackward1] = useState(false);
+  const [isPlayingBackward2, setIsPlayingBackward2] = useState(false);
   
   // Timer states
   const [recordingTime1, setRecordingTime1] = useState(0);
