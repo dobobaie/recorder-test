@@ -534,10 +534,6 @@ export default function Index() {
       const reversedUri = await reverseAudioFile(audio2.uri);
       
       console.log('Audio reversed successfully, uri:', reversedUri);
-      
-      // Check if file exists
-      const fileInfo = await FileSystem.getInfoAsync(reversedUri);
-      console.log('Reversed file info:', fileInfo);
 
       console.log('Creating sound from reversed URI');
       
