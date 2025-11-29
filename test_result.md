@@ -179,6 +179,9 @@ frontend:
       - working: "NA"
         agent: "main"
         comment: "Implemented standalone Play Backward button that plays the second recording in reverse. Disabled until second recording exists."
+      - working: "NA"
+        agent: "main"
+        comment: "FIXED: Changed middle button to play FIRST recording backward instead of second. Now calls playAudio1Backward() and is enabled when audio1 exists. Button text updated to 'Play First Recording Backward' for clarity."
 
   - task: "New Session functionality"
     implemented: true
