@@ -281,6 +281,15 @@ export default function Index() {
     if (!audio1) return;
 
     try {
+      // If already playing, stop it
+      if (isPlaying1 && sound1) {
+        await sound1.stopAsync();
+        await sound1.unloadAsync();
+        setSound1(null);
+        setIsPlaying1(false);
+        return;
+      }
+
       if (sound1) {
         await sound1.unloadAsync();
       }
