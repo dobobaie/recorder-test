@@ -308,90 +308,69 @@ export default function Index() {
 
   const reverseAudioFile = async (audioUri: string): Promise<string> => {
     try {
+      console.log('Starting audio reversal for:', audioUri);
+      
       // Read the audio file as base64
       const audioBase64 = await FileSystem.readAsStringAsync(audioUri, {
         encoding: FileSystem.EncodingType.Base64,
       });
+      
+      console.log('Audio file read, size:', audioBase64.length);
 
-      // Convert base64 to ArrayBuffer
+      // Simple approach: reverse the bytes directly
+      // This works for PCM audio and gives a reverse effect
       const binaryString = atob(audioBase64);
       const bytes = new Uint8Array(binaryString.length);
       for (let i = 0; i < binaryString.length; i++) {
         bytes[i] = binaryString.charCodeAt(i);
       }
-
-      // Try backend reversal first
-      try {
-        const backendUrl = process.env.EXPO_PUBLIC_BACKEND_URL || '';
-        const formData = new FormData();
-        
-        // Create a proper file blob
-        const blob = new Blob([bytes], { type: 'audio/m4a' });
-        formData.append('file', blob, 'audio.m4a');
-
-        const response = await fetch(`${backendUrl}/api/reverse-audio`, {
-          method: 'POST',
-          body: formData,
-        });
-
-        if (response.ok) {
-          // Backend succeeded
-          const reversedBlob = await response.blob();
-          const reversedArrayBuffer = await reversedBlob.arrayBuffer();
-          const reversedBytes = new Uint8Array(reversedArrayBuffer);
-          
-          // Convert to base64
-          let binary = '';
-          for (let i = 0; i < reversedBytes.byteLength; i++) {
-            binary += String.fromCharCode(reversedBytes[i]);
-          }
-          const reversedBase64 = btoa(binary);
-          
-          // Save to file
-          const reversedUri = `${FileSystem.cacheDirectory}reversed_${Date.now()}.m4a`;
-          await FileSystem.writeAsStringAsync(reversedUri, reversedBase64, {
-            encoding: FileSystem.EncodingType.Base64,
-          });
-          
-          return reversedUri;
-        }
-      } catch (backendError) {
-        console.warn('Backend reversal failed, using frontend fallback:', backendError);
-      }
-
-      // Fallback: Simple chunk reversal (works reasonably for simple audio)
-      // Find audio data (skip headers - typically first 44-100 bytes for WAV/m4a)
-      const headerSize = 100; // Conservative estimate
-      const header = bytes.slice(0, headerSize);
-      const audioData = bytes.slice(headerSize);
       
-      // Reverse audio data in chunks (preserve sample integrity)
-      const chunkSize = 4; // 4 bytes = typical sample size
-      const reversedData = new Uint8Array(audioData.length);
-      
-      for (let i = 0; i < audioData.length; i += chunkSize) {
-        const chunk = audioData.slice(i, Math.min(i + chunkSize, audioData.length));
-        const destIndex = audioData.length - i - chunk.length;
-        reversedData.set(chunk, destIndex);
-      }
-      
-      // Combine header and reversed data
+      console.log('Converted to bytes:', bytes.length);
+
+      // Reverse in chunks to preserve audio samples (2 bytes per sample for 16-bit audio)
+      const chunkSize = 2;
       const reversedBytes = new Uint8Array(bytes.length);
-      reversedBytes.set(header, 0);
-      reversedBytes.set(reversedData, headerSize);
+      
+      // Keep header (first 44 bytes for WAV, ~100 for M4A)
+      const headerSize = Math.min(44, bytes.length);
+      for (let i = 0; i < headerSize; i++) {
+        reversedBytes[i] = bytes[i];
+      }
+      
+      // Reverse the rest in chunks
+      const dataStart = headerSize;
+      const dataLength = bytes.length - dataStart;
+      
+      for (let i = 0; i < dataLength; i += chunkSize) {
+        const srcPos = dataStart + i;
+        const destPos = bytes.length - chunkSize - i;
+        
+        // Copy chunk in reverse order
+        for (let j = 0; j < chunkSize && srcPos + j < bytes.length; j++) {
+          reversedBytes[destPos + j] = bytes[srcPos + j];
+        }
+      }
+      
+      console.log('Audio reversed, converting back to base64');
       
       // Convert back to base64
       let binary = '';
-      for (let i = 0; i < reversedBytes.byteLength; i++) {
-        binary += String.fromCharCode(reversedBytes[i]);
+      const chunkSizeForConversion = 8192;
+      for (let i = 0; i < reversedBytes.length; i += chunkSizeForConversion) {
+        const chunk = reversedBytes.slice(i, Math.min(i + chunkSizeForConversion, reversedBytes.length));
+        binary += String.fromCharCode.apply(null, Array.from(chunk));
       }
       const reversedBase64 = btoa(binary);
+      
+      console.log('Converted back to base64, size:', reversedBase64.length);
       
       // Save to file
       const reversedUri = `${FileSystem.cacheDirectory}reversed_${Date.now()}.m4a`;
       await FileSystem.writeAsStringAsync(reversedUri, reversedBase64, {
         encoding: FileSystem.EncodingType.Base64,
       });
+      
+      console.log('Saved reversed audio to:', reversedUri);
       
       return reversedUri;
       
