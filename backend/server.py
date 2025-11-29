@@ -56,6 +56,48 @@ async def get_status_checks():
     status_checks = await db.status_checks.find().to_list(1000)
     return [StatusCheck(**status_check) for status_check in status_checks]
 
+@api_router.post("/reverse-audio")
+async def reverse_audio(file: UploadFile = File(...)):
+    """
+    Reverse an audio file and return the reversed version
+    """
+    try:
+        # Create temp directory for processing
+        with tempfile.TemporaryDirectory() as temp_dir:
+            # Save uploaded file
+            input_path = os.path.join(temp_dir, "input.m4a")
+            with open(input_path, "wb") as buffer:
+                shutil.copyfileobj(file.file, buffer)
+            
+            # Load audio
+            audio = AudioSegment.from_file(input_path)
+            
+            # Reverse the audio
+            reversed_audio = audio.reverse()
+            
+            # Export reversed audio
+            output_path = os.path.join(temp_dir, "reversed.m4a")
+            reversed_audio.export(output_path, format="ipod")
+            
+            # Save to a persistent location
+            output_filename = f"reversed_{uuid.uuid4()}.m4a"
+            output_dir = Path("/tmp/audio_outputs")
+            output_dir.mkdir(exist_ok=True)
+            final_output_path = output_dir / output_filename
+            
+            shutil.copy(output_path, final_output_path)
+            
+            # Return the file
+            return FileResponse(
+                path=str(final_output_path),
+                media_type="audio/mp4",
+                filename=output_filename
+            )
+    
+    except Exception as e:
+        logger.error(f"Error reversing audio: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Failed to reverse audio: {str(e)}")
+
 # Include the router in the main app
 app.include_router(api_router)
 
