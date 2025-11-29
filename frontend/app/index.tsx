@@ -381,34 +381,59 @@ export default function Index() {
   };
 
   const playAudio1Backward = async () => {
-    if (!audio1) return;
+    console.log('=== playAudio1Backward called ===');
+    console.log('audio1:', audio1);
+    
+    if (!audio1) {
+      console.log('No audio1, returning');
+      Alert.alert('No Audio', 'Please record audio first');
+      return;
+    }
 
     try {
+      console.log('Setting isPlayingBackward1 to true');
       setIsPlayingBackward1(true);
 
       if (soundBackward1) {
+        console.log('Unloading previous backward sound');
         await soundBackward1.unloadAsync();
       }
 
+      console.log('About to reverse audio file:', audio1.uri);
+      
       // Reverse the audio
       const reversedUri = await reverseAudioFile(audio1.uri);
+      
+      console.log('Audio reversed successfully, uri:', reversedUri);
+      
+      // Check if file exists
+      const fileInfo = await FileSystem.getInfoAsync(reversedUri);
+      console.log('Reversed file info:', fileInfo);
 
+      console.log('Creating sound from reversed URI');
+      
       // Play reversed audio
       const { sound } = await Audio.Sound.createAsync(
         { uri: reversedUri },
         { shouldPlay: true }
       );
 
+      console.log('Sound created successfully');
       setSoundBackward1(sound);
 
       sound.setOnPlaybackStatusUpdate((status) => {
+        console.log('Playback status:', status);
         if (status.isLoaded && status.didJustFinish) {
+          console.log('Playback finished');
           setIsPlayingBackward1(false);
         }
       });
+      
+      console.log('Playback started');
 
     } catch (error) {
       console.error('Failed to play audio 1 backward:', error);
+      console.error('Error stack:', error.stack);
       Alert.alert('Error', `Failed to play audio backward: ${error.message || error}`);
       setIsPlayingBackward1(false);
     }
