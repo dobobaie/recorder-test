@@ -694,11 +694,10 @@ export default function Index() {
             <TouchableOpacity
               style={[styles.smallButton, styles.playButton]}
               onPress={playAudio1}
-              disabled={isPlaying1}
             >
-              <Ionicons name={isPlaying1 ? "volume-high" : "play"} size={24} color="#fff" />
+              <Ionicons name={isPlaying1 ? "stop" : "play"} size={24} color="#fff" />
               <Text style={styles.smallButtonText}>
-                {isPlaying1 ? "Playing..." : "Play"}
+                {isPlaying1 ? "Stop" : "Play"}
               </Text>
             </TouchableOpacity>
             
