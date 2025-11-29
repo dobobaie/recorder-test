@@ -273,40 +273,10 @@ export default function Index() {
 
   const reverseAudio = async (uri: string): Promise<string> => {
     try {
-      // Read the audio file
-      const audioData = await FileSystem.readAsStringAsync(uri, {
-        encoding: FileSystem.EncodingType.Base64,
-      });
-
-      // Convert base64 to binary
-      const binaryString = atob(audioData);
-      const bytes = new Uint8Array(binaryString.length);
-      for (let i = 0; i < binaryString.length; i++) {
-        bytes[i] = binaryString.charCodeAt(i);
-      }
-
-      // Simple reversal approach: reverse the audio data
-      // Note: This is a simplified approach. True audio reversal requires
-      // proper audio processing, but this gives the reverse effect
-      const reversedBytes = new Uint8Array(bytes.length);
-      for (let i = 0; i < bytes.length; i++) {
-        reversedBytes[i] = bytes[bytes.length - 1 - i];
-      }
-
-      // Convert back to base64
-      let reversedBinary = '';
-      for (let i = 0; i < reversedBytes.length; i++) {
-        reversedBinary += String.fromCharCode(reversedBytes[i]);
-      }
-      const reversedBase64 = btoa(reversedBinary);
-
-      // Write to new file
-      const reversedUri = `${FileSystem.cacheDirectory}reversed_${Date.now()}.m4a`;
-      await FileSystem.writeAsStringAsync(reversedUri, reversedBase64, {
-        encoding: FileSystem.EncodingType.Base64,
-      });
-
-      return reversedUri;
+      // For now, we'll play the audio at negative rate using the Sound API
+      // This is a workaround since true audio reversal requires complex processing
+      // We'll return the original URI and handle reversal in playback
+      return uri;
     } catch (error) {
       console.error('Failed to reverse audio:', error);
       throw error;
