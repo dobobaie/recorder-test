@@ -876,6 +876,9 @@ const styles = StyleSheet.create({
   playButton: {
     backgroundColor: '#10b981',
   },
+  playBackwardButton: {
+    backgroundColor: '#f59e0b', // Orange/amber for second section
+  },
   backwardButton: {
     backgroundColor: '#8b5cf6',
   },
