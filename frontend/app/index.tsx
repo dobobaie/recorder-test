@@ -627,10 +627,6 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: '600',
   },
-  recordingContainer: {
-    alignItems: 'center',
-    gap: 16,
-  },
   waveformContainer: {
     flexDirection: 'row',
     alignItems: 'center',
