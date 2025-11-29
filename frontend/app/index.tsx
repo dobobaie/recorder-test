@@ -588,20 +588,20 @@ export default function Index() {
         )}
       </View>
 
-      {/* Play Backward Button */}
+      {/* Play Backward Button - for first recording */}
       <View style={styles.section}>
         <TouchableOpacity
           style={[
             styles.mainButton,
             styles.backwardButton,
-            !audio2 && styles.disabledButton
+            !audio1 && styles.disabledButton
           ]}
-          onPress={playAudio2Backward}
-          disabled={!audio2 || isPlaying2}
+          onPress={playAudio1Backward}
+          disabled={!audio1 || isPlayingBackward1}
         >
           <Ionicons name="play-back" size={32} color="#fff" />
           <Text style={styles.buttonText}>
-            {isPlaying2 ? "Playing Backward..." : "Play Backward"}
+            {isPlayingBackward1 ? "Playing Backward..." : "Play First Recording Backward"}
           </Text>
         </TouchableOpacity>
       </View>
