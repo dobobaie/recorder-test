@@ -545,30 +545,40 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     backgroundColor: '#f8fafc',
     padding: 20,
+    paddingTop: 20,
     paddingBottom: 40,
   },
-  title: {
-    fontSize: 32,
-    fontWeight: 'bold',
+  subtitle: {
+    fontSize: 20,
+    fontWeight: '600',
     color: '#1e293b',
     textAlign: 'center',
-    marginBottom: 8,
+    marginBottom: 16,
   },
-  subtitle: {
-    fontSize: 16,
-    color: '#64748b',
+  permissionWarning: {
+    backgroundColor: '#fee2e2',
+    padding: 12,
+    borderRadius: 8,
+    marginBottom: 24,
+  },
+  permissionText: {
+    fontSize: 14,
+    color: '#dc2626',
     textAlign: 'center',
-    marginBottom: 40,
+    fontWeight: '500',
   },
   section: {
     marginBottom: 24,
   },
-  sectionTitle: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#475569',
-    marginBottom: 12,
-    textAlign: 'center',
+  recordingRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    gap: 16,
+  },
+  waveformSection: {
+    flex: 1,
+    alignItems: 'center',
   },
   mainButton: {
     flexDirection: 'row',
