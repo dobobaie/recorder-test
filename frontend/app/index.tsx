@@ -64,6 +64,8 @@ export default function Index() {
       // Cleanup
       if (sound1) sound1.unloadAsync();
       if (sound2) sound2.unloadAsync();
+      if (soundBackward1) soundBackward1.unloadAsync();
+      if (soundBackward2) soundBackward2.unloadAsync();
       if (recording1) recording1.stopAndUnloadAsync();
       if (recording2) recording2.stopAndUnloadAsync();
     };
