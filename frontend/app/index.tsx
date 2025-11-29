@@ -304,6 +304,85 @@ export default function Index() {
     }
   };
 
+  const playAudio1Backward = async () => {
+    if (!audio1) return;
+
+    try {
+      setIsPlayingBackward1(true);
+
+      if (soundBackward1) {
+        await soundBackward1.unloadAsync();
+      }
+
+      // Send audio to backend for reversal
+      const formData = new FormData();
+      const fileInfo = await FileSystem.getInfoAsync(audio1.uri);
+      
+      if (!fileInfo.exists) {
+        throw new Error('Audio file not found');
+      }
+
+      // Create blob from file
+      const response = await fetch(audio1.uri);
+      const blob = await response.blob();
+      
+      formData.append('file', {
+        uri: audio1.uri,
+        type: 'audio/m4a',
+        name: 'audio.m4a',
+      } as any);
+
+      // Call backend API
+      const backendUrl = process.env.EXPO_PUBLIC_BACKEND_URL || '';
+      const apiResponse = await fetch(`${backendUrl}/api/reverse-audio`, {
+        method: 'POST',
+        body: formData,
+        headers: {
+          'Accept': 'audio/mp4',
+        },
+      });
+
+      if (!apiResponse.ok) {
+        throw new Error(`Backend error: ${apiResponse.status}`);
+      }
+
+      // Get reversed audio
+      const reversedBlob = await apiResponse.blob();
+      const reversedUri = `${FileSystem.cacheDirectory}reversed_audio1_${Date.now()}.m4a`;
+      
+      // Convert blob to base64 and save
+      const reader = new FileReader();
+      reader.readAsDataURL(reversedBlob);
+      reader.onloadend = async () => {
+        const base64data = reader.result as string;
+        const base64Audio = base64data.split(',')[1];
+        
+        await FileSystem.writeAsStringAsync(reversedUri, base64Audio, {
+          encoding: FileSystem.EncodingType.Base64,
+        });
+
+        // Play reversed audio
+        const { sound } = await Audio.Sound.createAsync(
+          { uri: reversedUri },
+          { shouldPlay: true }
+        );
+
+        setSoundBackward1(sound);
+
+        sound.setOnPlaybackStatusUpdate((status) => {
+          if (status.isLoaded && status.didJustFinish) {
+            setIsPlayingBackward1(false);
+          }
+        });
+      };
+
+    } catch (error) {
+      console.error('Failed to play audio 1 backward:', error);
+      Alert.alert('Error', `Failed to play audio backward: ${error}`);
+      setIsPlayingBackward1(false);
+    }
+  };
+
   const playAudio2Backward = async () => {
     if (!audio2) return;
 
