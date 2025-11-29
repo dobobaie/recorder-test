@@ -387,10 +387,10 @@ export default function Index() {
     if (!audio2) return;
 
     try {
-      setIsPlaying2(true);
+      setIsPlayingBackward2(true);
 
-      if (sound2) {
-        await sound2.unloadAsync();
+      if (soundBackward2) {
+        await soundBackward2.unloadAsync();
       }
 
       // Send audio to backend for reversal
@@ -427,7 +427,7 @@ export default function Index() {
 
       // Get reversed audio
       const reversedBlob = await apiResponse.blob();
-      const reversedUri = `${FileSystem.cacheDirectory}reversed_${Date.now()}.m4a`;
+      const reversedUri = `${FileSystem.cacheDirectory}reversed_audio2_${Date.now()}.m4a`;
       
       // Convert blob to base64 and save
       const reader = new FileReader();
@@ -446,11 +446,11 @@ export default function Index() {
           { shouldPlay: true }
         );
 
-        setSound2(sound);
+        setSoundBackward2(sound);
 
         sound.setOnPlaybackStatusUpdate((status) => {
           if (status.isLoaded && status.didJustFinish) {
-            setIsPlaying2(false);
+            setIsPlayingBackward2(false);
           }
         });
       };
@@ -458,7 +458,7 @@ export default function Index() {
     } catch (error) {
       console.error('Failed to play audio 2 backward:', error);
       Alert.alert('Error', `Failed to play audio backward: ${error}`);
-      setIsPlaying2(false);
+      setIsPlayingBackward2(false);
     }
   };
 
