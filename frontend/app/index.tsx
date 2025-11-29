@@ -638,11 +638,11 @@ export default function Index() {
             <TouchableOpacity
               style={[styles.smallButton, styles.playButton]}
               onPress={playAudio2Backward}
-              disabled={isPlaying2}
+              disabled={isPlayingBackward2}
             >
-              <Ionicons name={isPlaying2 ? "volume-high" : "play-back"} size={24} color="#fff" />
+              <Ionicons name={isPlayingBackward2 ? "volume-high" : "play-back"} size={24} color="#fff" />
               <Text style={styles.smallButtonText}>
-                {isPlaying2 ? "Playing..." : "Play Backward"}
+                {isPlayingBackward2 ? "Playing..." : "Play Backward"}
               </Text>
             </TouchableOpacity>
             
