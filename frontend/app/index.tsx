@@ -433,17 +433,20 @@ export default function Index() {
 
   if (!permissionGranted) {
     return (
-      <View style={styles.container}>
-        <Text style={styles.permissionText}>Microphone permission required</Text>
-        <TouchableOpacity style={styles.retryButton} onPress={requestPermissions}>
-          <Text style={styles.retryButtonText}>Grant Permission</Text>
-        </TouchableOpacity>
-      </View>
+      <SafeAreaView style={styles.safeArea}>
+        <View style={styles.container}>
+          <Text style={styles.permissionText}>Microphone permission required</Text>
+          <TouchableOpacity style={[styles.smallButton, styles.retryButton]} onPress={requestPermissions}>
+            <Text style={styles.retryButtonText}>Grant Permission</Text>
+          </TouchableOpacity>
+        </View>
+      </SafeAreaView>
     );
   }
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.safeArea}>
+      <ScrollView style={styles.scrollView} contentContainerStyle={styles.container}>
       <Text style={styles.title}>Audio Recorder</Text>
       <Text style={styles.subtitle}>Record, Play & Reverse</Text>
 
