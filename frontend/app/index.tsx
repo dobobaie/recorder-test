@@ -580,7 +580,8 @@ export default function Index() {
         <Ionicons name="add-circle-outline" size={20} color="#6366f1" />
         <Text style={styles.newSessionText}>New Session</Text>
       </TouchableOpacity>
-    </View>
+      </ScrollView>
+    </SafeAreaView>
   );
 }
 
