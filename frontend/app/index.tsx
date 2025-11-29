@@ -760,13 +760,12 @@ export default function Index() {
         ) : (
           <View style={styles.actionRow}>
             <TouchableOpacity
-              style={[styles.smallButton, styles.playButton]}
+              style={[styles.smallButton, styles.playBackwardButton]}
               onPress={playAudio2Backward}
-              disabled={isPlayingBackward2}
             >
-              <Ionicons name={isPlayingBackward2 ? "volume-high" : "play-back"} size={24} color="#fff" />
+              <Ionicons name={isPlayingBackward2 ? "stop" : "play-back"} size={24} color="#fff" />
               <Text style={styles.smallButtonText}>
-                {isPlayingBackward2 ? "Playing..." : "Play Backward"}
+                {isPlayingBackward2 ? "Stop" : "Play Backward"}
               </Text>
             </TouchableOpacity>
             
