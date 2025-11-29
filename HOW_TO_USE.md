@@ -15,7 +15,7 @@ This is an Android audio recording app that lets you record, play, and listen to
 4. The app will load on your device!
 
 ### Option 2: Web Preview (Limited Audio Features)
-Open in browser: https://audio-processing-1.preview.emergentagent.com
+Open in browser: https://smoothplay-4.preview.emergentagent.com
 ⚠️ Note: Web browsers have limited audio recording capabilities. For full functionality, use Expo Go on Android.
 
 ## 🎯 Features

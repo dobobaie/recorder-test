@@ -445,6 +445,16 @@ export default function Index() {
     }
 
     try {
+      // If already playing, stop it
+      if (isPlayingBackward1 && soundBackward1) {
+        console.log('Stopping backward playback');
+        await soundBackward1.stopAsync();
+        await soundBackward1.unloadAsync();
+        setSoundBackward1(null);
+        setIsPlayingBackward1(false);
+        return;
+      }
+
       console.log('Setting isPlayingBackward1 to true');
       setIsPlayingBackward1(true);
 
