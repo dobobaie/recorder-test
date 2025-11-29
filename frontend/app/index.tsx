@@ -277,6 +277,66 @@ export default function Index() {
     }
   };
 
+  // Helper function to convert AudioBuffer to WAV format
+  const audioBufferToWav = (buffer: AudioBuffer): ArrayBuffer => {
+    const numberOfChannels = buffer.numberOfChannels;
+    const sampleRate = buffer.sampleRate;
+    const format = 1; // PCM
+    const bitDepth = 16;
+    
+    const bytesPerSample = bitDepth / 8;
+    const blockAlign = numberOfChannels * bytesPerSample;
+    
+    const data = [];
+    for (let i = 0; i < buffer.numberOfChannels; i++) {
+      data.push(buffer.getChannelData(i));
+    }
+    
+    const interleaved = new Float32Array(buffer.length * numberOfChannels);
+    for (let src = 0; src < buffer.length; src++) {
+      for (let channel = 0; channel < numberOfChannels; channel++) {
+        interleaved[src * numberOfChannels + channel] = data[channel][src];
+      }
+    }
+    
+    const dataLength = interleaved.length * bytesPerSample;
+    const headerLength = 44;
+    const wav = new ArrayBuffer(headerLength + dataLength);
+    const view = new DataView(wav);
+    
+    // Write WAV header
+    const writeString = (offset: number, string: string) => {
+      for (let i = 0; i < string.length; i++) {
+        view.setUint8(offset + i, string.charCodeAt(i));
+      }
+    };
+    
+    writeString(0, 'RIFF');
+    view.setUint32(4, 36 + dataLength, true);
+    writeString(8, 'WAVE');
+    writeString(12, 'fmt ');
+    view.setUint32(16, 16, true); // fmt chunk size
+    view.setUint16(20, format, true);
+    view.setUint16(22, numberOfChannels, true);
+    view.setUint32(24, sampleRate, true);
+    view.setUint32(28, sampleRate * blockAlign, true);
+    view.setUint16(32, blockAlign, true);
+    view.setUint16(34, bitDepth, true);
+    writeString(36, 'data');
+    view.setUint32(40, dataLength, true);
+    
+    // Write audio data
+    const volume = 0.8;
+    let offset = 44;
+    for (let i = 0; i < interleaved.length; i++) {
+      const sample = Math.max(-1, Math.min(1, interleaved[i]));
+      view.setInt16(offset, sample < 0 ? sample * 0x8000 : sample * 0x7FFF, true);
+      offset += 2;
+    }
+    
+    return wav;
+  };
+
   const playAudio1 = async () => {
     if (!audio1) return;
 
