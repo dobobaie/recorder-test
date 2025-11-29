@@ -689,15 +689,4 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '600',
   },
-  permissionText: {
-    fontSize: 18,
-    color: '#64748b',
-    textAlign: 'center',
-    marginBottom: 20,
-  },
-  retryButtonText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: '600',
-  },
 });
