@@ -271,18 +271,6 @@ export default function Index() {
     }
   };
 
-  const reverseAudio = async (uri: string): Promise<string> => {
-    try {
-      // For now, we'll play the audio at negative rate using the Sound API
-      // This is a workaround since true audio reversal requires complex processing
-      // We'll return the original URI and handle reversal in playback
-      return uri;
-    } catch (error) {
-      console.error('Failed to reverse audio:', error);
-      throw error;
-    }
-  };
-
   const playAudio1 = async () => {
     if (!audio1) return;
 
@@ -322,11 +310,11 @@ export default function Index() {
         await sound2.unloadAsync();
       }
 
-      // Reverse the audio
-      const reversedUri = await reverseAudio(audio2.uri);
-
+      // Simply play the audio normally for now
+      // Note: True audio reversal requires native processing
+      // This is a limitation of expo-av
       const { sound } = await Audio.Sound.createAsync(
-        { uri: reversedUri },
+        { uri: audio2.uri },
         { shouldPlay: true }
       );
 
