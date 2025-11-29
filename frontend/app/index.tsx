@@ -320,51 +320,47 @@ export default function Index() {
       console.log('Starting audio reversal for:', audioUri);
       console.log('Platform:', Platform.OS);
       
-      // For web, use blob/fetch approach
+      // For web, use Web Audio API for proper audio reversal
       if (Platform.OS === 'web' || audioUri.startsWith('blob:')) {
-        console.log('Using web-based reversal');
+        console.log('Using Web Audio API reversal');
         
-        // Fetch the blob
+        // Fetch the audio file
         const response = await fetch(audioUri);
-        const blob = await response.blob();
-        console.log('Blob fetched, size:', blob.size, 'type:', blob.type);
+        const arrayBuffer = await response.arrayBuffer();
+        console.log('Audio fetched, size:', arrayBuffer.byteLength);
         
-        // Convert blob to ArrayBuffer
-        const arrayBuffer = await blob.arrayBuffer();
-        const bytes = new Uint8Array(arrayBuffer);
-        console.log('Converted to bytes:', bytes.length);
+        // Create audio context
+        const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
         
-        // Reverse in chunks to preserve audio samples (2 bytes per sample for 16-bit audio)
-        const chunkSize = 2;
-        const reversedBytes = new Uint8Array(bytes.length);
+        // Decode audio data
+        const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
+        console.log('Audio decoded, duration:', audioBuffer.duration, 'channels:', audioBuffer.numberOfChannels);
         
-        // Keep header (first 44 bytes for WAV)
-        const headerSize = Math.min(44, bytes.length);
-        for (let i = 0; i < headerSize; i++) {
-          reversedBytes[i] = bytes[i];
-        }
+        // Reverse the audio samples
+        const reversedBuffer = audioContext.createBuffer(
+          audioBuffer.numberOfChannels,
+          audioBuffer.length,
+          audioBuffer.sampleRate
+        );
         
-        // Reverse the rest in chunks
-        const dataStart = headerSize;
-        const dataLength = bytes.length - dataStart;
-        
-        for (let i = 0; i < dataLength; i += chunkSize) {
-          const srcPos = dataStart + i;
-          const destPos = bytes.length - chunkSize - i;
+        // Reverse each channel
+        for (let channel = 0; channel < audioBuffer.numberOfChannels; channel++) {
+          const channelData = audioBuffer.getChannelData(channel);
+          const reversedData = reversedBuffer.getChannelData(channel);
           
-          // Copy chunk in reverse order
-          for (let j = 0; j < chunkSize && srcPos + j < bytes.length; j++) {
-            reversedBytes[destPos + j] = bytes[srcPos + j];
+          for (let i = 0; i < channelData.length; i++) {
+            reversedData[i] = channelData[channelData.length - 1 - i];
           }
         }
         
-        console.log('Audio reversed, creating new blob');
+        console.log('Audio samples reversed');
         
-        // Create new blob from reversed bytes
-        const reversedBlob = new Blob([reversedBytes], { type: blob.type || 'audio/wav' });
+        // Convert back to WAV blob
+        const reversedWav = await audioBufferToWav(reversedBuffer);
+        const reversedBlob = new Blob([reversedWav], { type: 'audio/wav' });
         const reversedUri = URL.createObjectURL(reversedBlob);
         
-        console.log('Created reversed blob URL:', reversedUri);
+        console.log('Created reversed audio blob URL:', reversedUri);
         
         return reversedUri;
         
