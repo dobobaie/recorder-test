@@ -586,11 +586,18 @@ export default function Index() {
 }
 
 const styles = StyleSheet.create({
-  container: {
+  safeArea: {
     flex: 1,
     backgroundColor: '#f8fafc',
+  },
+  scrollView: {
+    flex: 1,
+  },
+  container: {
+    flexGrow: 1,
+    backgroundColor: '#f8fafc',
     padding: 20,
-    paddingTop: Platform.OS === 'ios' ? 60 : 50,
+    paddingBottom: 40,
   },
   title: {
     fontSize: 32,
