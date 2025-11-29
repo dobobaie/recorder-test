@@ -930,6 +930,9 @@ const styles = StyleSheet.create({
   retryButton: {
     backgroundColor: '#6366f1',
   },
+  retryButton2: {
+    backgroundColor: '#d97706', // Darker orange for second section retry
+  },
   smallButtonText: {
     color: '#fff',
     fontSize: 14,
