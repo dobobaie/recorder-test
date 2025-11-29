@@ -770,7 +770,7 @@ export default function Index() {
             </TouchableOpacity>
             
             <TouchableOpacity
-              style={[styles.smallButton, styles.retryButton]}
+              style={[styles.smallButton, styles.retryButton2]}
               onPress={retryRecording2}
             >
               <Ionicons name="refresh" size={24} color="#fff" />
