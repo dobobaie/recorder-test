@@ -873,7 +873,7 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   section: {
-    marginBottom: 24,
+    marginBottom: 20,
   },
   recordingRow: {
     flexDirection: 'row',
@@ -889,15 +889,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    padding: 20,
-    borderRadius: 16,
-    minHeight: 80,
+    paddingVertical: 24,
+    paddingHorizontal: 32,
+    borderRadius: 24,
+    minHeight: 88,
     gap: 12,
-    elevation: 4,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
+    boxShadow: '0 4px 16px rgba(0, 0, 0, 0.08)',
   },
   recordButton: {
     backgroundColor: '#ef4444',
@@ -907,33 +904,30 @@ const styles = StyleSheet.create({
   },
   stopButton: {
     backgroundColor: '#64748b',
-    width: 64,
-    height: 64,
-    borderRadius: 32,
+    width: 72,
+    height: 72,
+    borderRadius: 36,
     alignItems: 'center',
     justifyContent: 'center',
-    elevation: 4,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
+    boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
   },
   playButton: {
     backgroundColor: '#10b981',
   },
   playBackwardButton: {
-    backgroundColor: '#f59e0b', // Orange/amber for second section
+    backgroundColor: '#f59e0b',
   },
   backwardButton: {
     backgroundColor: '#8b5cf6',
   },
   disabledButton: {
-    opacity: 0.5,
+    opacity: 0.4,
   },
   buttonText: {
     color: '#fff',
-    fontSize: 18,
-    fontWeight: '600',
+    fontSize: 17,
+    fontWeight: '700',
+    letterSpacing: 0.3,
   },
   waveformContainer: {
     flexDirection: 'row',
