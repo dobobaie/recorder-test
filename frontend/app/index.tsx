@@ -602,6 +602,16 @@ const styles = StyleSheet.create({
   },
   stopButton: {
     backgroundColor: '#64748b',
+    width: 64,
+    height: 64,
+    borderRadius: 32,
+    alignItems: 'center',
+    justifyContent: 'center',
+    elevation: 4,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
   },
   playButton: {
     backgroundColor: '#10b981',
