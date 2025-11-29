@@ -205,17 +205,17 @@ frontend:
         comment: "Implemented clean UI with: light background (#f8fafc), colorful buttons (red #ef4444 for record1, orange #f59e0b for record2, purple #8b5cf6 for backward, green #10b981 for play, blue #6366f1 for actions). Used Ionicons for icons."
 
 backend:
-  - task: "No backend required"
+  - task: "Backend template available (not required for audio app)"
     implemented: true
     working: true
-    file: "N/A"
+    file: "/app/backend/server.py"
     stuck_count: 0
     priority: "low"
     needs_retesting: false
     status_history:
       - working: true
         agent: "main"
-        comment: "This app only needs frontend (no persistent storage requested). All audio processing happens on device using expo-av and expo-file-system."
+        comment: "Backend has basic FastAPI template with MongoDB connection and status check endpoints. Audio app is fully frontend-only - all audio recording, playback, and reversal happens client-side using expo-av, expo-file-system, and Web Audio API. Backend kept as template for future features if needed."
 
 metadata:
   created_by: "main_agent"
