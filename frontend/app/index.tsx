@@ -389,41 +389,32 @@ export default function Index() {
     );
   };
 
-  if (!permissionGranted) {
-    return (
-      <SafeAreaView style={styles.safeArea}>
-        <View style={styles.container}>
-          <Text style={styles.permissionText}>Microphone permission required</Text>
-          <TouchableOpacity style={[styles.smallButton, styles.retryButton]} onPress={requestPermissions}>
-            <Text style={styles.retryButtonText}>Grant Permission</Text>
-          </TouchableOpacity>
-        </View>
-      </SafeAreaView>
-    );
-  }
-
   return (
     <SafeAreaView style={styles.safeArea}>
       <ScrollView style={styles.scrollView} contentContainerStyle={styles.container}>
-      <Text style={styles.title}>Audio Recorder</Text>
       <Text style={styles.subtitle}>Record, Play & Reverse</Text>
+      
+      {!permissionGranted && (
+        <TouchableOpacity onPress={requestPermissions} style={styles.permissionWarning}>
+          <Text style={styles.permissionText}>⚠️ Microphone permission required - tap to grant</Text>
+        </TouchableOpacity>
+      )}
 
       {/* Recording 1 Section */}
       <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Normal Recording</Text>
-        
         {!audio1 ? (
           <>
             {isRecording1 ? (
-              <View style={styles.recordingContainer}>
-                <WaveformIndicator waveAnim={waveAnim1} />
-                <Text style={styles.timerText}>{formatTime(recordingTime1)} / 0:30</Text>
+              <View style={styles.recordingRow}>
+                <View style={styles.waveformSection}>
+                  <WaveformIndicator waveAnim={waveAnim1} />
+                  <Text style={styles.timerText}>{formatTime(recordingTime1)} / 0:30</Text>
+                </View>
                 <TouchableOpacity
-                  style={[styles.mainButton, styles.stopButton]}
+                  style={[styles.stopButton]}
                   onPress={stopRecording1}
                 >
-                  <Ionicons name="stop" size={32} color="#fff" />
-                  <Text style={styles.buttonText}>Stop</Text>
+                  <Ionicons name="stop" size={28} color="#fff" />
                 </TouchableOpacity>
               </View>
             ) : (
