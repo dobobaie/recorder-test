@@ -584,7 +584,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#f8fafc',
     padding: 20,
-    paddingTop: 60,
+    paddingTop: Platform.OS === 'ios' ? 60 : 50,
   },
   title: {
     fontSize: 32,
