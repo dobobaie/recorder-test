@@ -702,11 +702,10 @@ export default function Index() {
   return (
     <SafeAreaView style={styles.safeArea}>
       <ScrollView style={styles.scrollView} contentContainerStyle={styles.container}>
-      <Text style={styles.subtitle}>Record, Play & Reverse</Text>
-      
       {!permissionGranted && (
         <TouchableOpacity onPress={requestPermissions} style={styles.permissionWarning}>
-          <Text style={styles.permissionText}>⚠️ Microphone permission required - tap to grant</Text>
+          <Ionicons name="mic-off" size={20} color="#dc2626" />
+          <Text style={styles.permissionText}>Microphone access needed</Text>
         </TouchableOpacity>
       )}
 
