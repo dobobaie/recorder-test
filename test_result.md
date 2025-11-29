@@ -241,3 +241,5 @@ test_plan:
 agent_communication:
   - agent: "main"
     message: "Implemented complete audio recording app with all requested features. App needs testing on actual mobile device (Expo Go) since web browsers have limited audio recording capabilities. Key features: 2 recording buttons with 30s limit, waveform animations, play/retry controls, backward audio playback, new session button. UI is clean with colorful buttons. Note: Audio reversal uses byte reversal which may not produce perfect audio reversal but should give a reverse effect. Ready for mobile device testing."
+  - agent: "main"
+    message: "FIXED audio reverse functionality. Implemented proper backend-based audio reversal using pydub library with ffmpeg. Created separate functions to distinguish between two audio reverses: playAudio1Backward() for first recording and playAudio2Backward() for second recording. Middle button now plays first recording backward, second recording's button plays second recording backward. Each has independent state tracking (isPlayingBackward1, isPlayingBackward2). Installed pydub and ffmpeg dependencies in backend. Ready for testing."
