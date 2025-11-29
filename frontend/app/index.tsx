@@ -471,20 +471,19 @@ export default function Index() {
 
       {/* Recording 2 Section */}
       <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Record for Backward</Text>
-        
         {!audio2 ? (
           <>
             {isRecording2 ? (
-              <View style={styles.recordingContainer}>
-                <WaveformIndicator waveAnim={waveAnim2} />
-                <Text style={styles.timerText}>{formatTime(recordingTime2)} / 0:30</Text>
+              <View style={styles.recordingRow}>
+                <View style={styles.waveformSection}>
+                  <WaveformIndicator waveAnim={waveAnim2} />
+                  <Text style={styles.timerText}>{formatTime(recordingTime2)} / 0:30</Text>
+                </View>
                 <TouchableOpacity
-                  style={[styles.mainButton, styles.stopButton]}
+                  style={[styles.stopButton]}
                   onPress={stopRecording2}
                 >
-                  <Ionicons name="stop" size={32} color="#fff" />
-                  <Text style={styles.buttonText}>Stop</Text>
+                  <Ionicons name="stop" size={28} color="#fff" />
                 </TouchableOpacity>
               </View>
             ) : (
