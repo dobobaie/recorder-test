@@ -156,7 +156,7 @@ frontend:
   - task: "Audio reversal and backward playback"
     implemented: true
     working: "NA"
-    file: "/app/frontend/app/index.tsx"
+    file: "/app/frontend/app/index.tsx, /app/backend/server.py"
     stuck_count: 0
     priority: "high"
     needs_retesting: true
@@ -164,6 +164,9 @@ frontend:
       - working: "NA"
         agent: "main"
         comment: "Implemented reverseAudio() function that reverses audio bytes and creates a reversed audio file. Play Backward button plays the reversed audio. Note: This is a simplified byte reversal approach - may not produce perfect audio reversal but gives reverse effect."
+      - working: "NA"
+        agent: "main"
+        comment: "FIXED: Now audio reversal uses backend API with pydub library for proper audio reversal. Created separate functions: playAudio1Backward() for first recording and playAudio2Backward() for second recording. Each maintains its own state (isPlayingBackward1, isPlayingBackward2) and sound objects (soundBackward1, soundBackward2). Middle button now plays first recording backward, second recording Play Backward button plays second recording backward. Installed ffmpeg for pydub support."
 
   - task: "Play Backward middle button"
     implemented: true
