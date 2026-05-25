@@ -425,62 +425,53 @@ export default function Index() {
         return reversedUri;
         
       } else {
-        // For native, use FileSystem
-        console.log('Using native FileSystem reversal');
-        
-        const audioBase64 = await FileSystem.readAsStringAsync(audioUri, {
-          encoding: FileSystem.EncodingType.Base64,
+        // For native, send the recorded audio to the backend, which uses
+        // pydub/ffmpeg to properly decode → reverse samples → re-encode.
+        // (Native byte-reversal cannot work on compressed AAC/M4A files —
+        // we tried that and ExoPlayer rejected the corrupted output with
+        // a FileDataSourceException.)
+        const backendUrl = process.env.EXPO_PUBLIC_BACKEND_URL;
+        if (!backendUrl) {
+          throw new Error('EXPO_PUBLIC_BACKEND_URL is not set');
+        }
+        console.log('Using backend reversal at', backendUrl);
+
+        const formData = new FormData();
+        formData.append('file', {
+          uri: audioUri,
+          name: 'recording.m4a',
+          type: 'audio/m4a',
+        } as any);
+
+        const response = await fetch(`${backendUrl}/api/reverse-audio`, {
+          method: 'POST',
+          body: formData,
         });
-        
-        console.log('Audio file read, size:', audioBase64.length);
 
-        const binaryString = atob(audioBase64);
-        const bytes = new Uint8Array(binaryString.length);
-        for (let i = 0; i < binaryString.length; i++) {
-          bytes[i] = binaryString.charCodeAt(i);
+        if (!response.ok) {
+          const errText = await response.text().catch(() => '');
+          throw new Error(`Backend returned ${response.status}: ${errText.slice(0, 200)}`);
         }
-        
-        console.log('Converted to bytes:', bytes.length);
 
-        const chunkSize = 2;
-        const reversedBytes = new Uint8Array(bytes.length);
-        
-        const headerSize = Math.min(44, bytes.length);
-        for (let i = 0; i < headerSize; i++) {
-          reversedBytes[i] = bytes[i];
-        }
-        
-        const dataStart = headerSize;
-        const dataLength = bytes.length - dataStart;
-        
-        for (let i = 0; i < dataLength; i += chunkSize) {
-          const srcPos = dataStart + i;
-          const destPos = bytes.length - chunkSize - i;
-          
-          for (let j = 0; j < chunkSize && srcPos + j < bytes.length; j++) {
-            reversedBytes[destPos + j] = bytes[srcPos + j];
-          }
-        }
-        
-        console.log('Audio reversed, converting back to base64');
-        
+        const arrayBuffer = await response.arrayBuffer();
+        const bytes = new Uint8Array(arrayBuffer);
+        console.log('Received reversed audio, size:', bytes.length);
+
         let binary = '';
         const chunkSizeForConversion = 8192;
-        for (let i = 0; i < reversedBytes.length; i += chunkSizeForConversion) {
-          const chunk = reversedBytes.slice(i, Math.min(i + chunkSizeForConversion, reversedBytes.length));
+        for (let i = 0; i < bytes.length; i += chunkSizeForConversion) {
+          const chunk = bytes.slice(i, Math.min(i + chunkSizeForConversion, bytes.length));
           binary += String.fromCharCode.apply(null, Array.from(chunk));
         }
         const reversedBase64 = btoa(binary);
-        
-        console.log('Converted back to base64, size:', reversedBase64.length);
-        
+
         const reversedUri = `${FileSystem.cacheDirectory}reversed_${Date.now()}.m4a`;
         await FileSystem.writeAsStringAsync(reversedUri, reversedBase64, {
           encoding: FileSystem.EncodingType.Base64,
         });
-        
+
         console.log('Saved reversed audio to:', reversedUri);
-        
+
         return reversedUri;
       }
       
